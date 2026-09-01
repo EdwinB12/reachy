@@ -1,0 +1,13 @@
+tts:
+  enabled: false
+  model_path: voices/en_US-lessac-medium.onnx
+  length_scale: 1.0
+
+stt:
+  enabled: false
+  model_size: base.en
+  device: cpu
+  compute_type: int8
+  silence_duration_s: 2.0
+  min_speech_duration_s: 0.3
+  amplitude_threshold: 0.1

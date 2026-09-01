@@ -1,0 +1,26 @@
+[project]
+name = "agent_reachy"
+version = "0.1.0"
+description = "Reachy agent"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "langchain",
+    "langchain-ollama",
+    "piper-tts",
+    "faster-whisper",
+    "pyyaml",
+]
+
+[project.scripts]
+r_status = "agent_reachy.daemon:status"
+r_wake = "agent_reachy.daemon:wake"
+r_sleep = "agent_reachy.daemon:sleep"
+r_agent = "agent_reachy.__main__:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["agent_reachy*"]

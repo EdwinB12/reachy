@@ -1,0 +1,11 @@
+.secrets/
+.claude/settings.local.json
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+venv/
+gst-plugins-rs/
+voices/
+*.env
+.env

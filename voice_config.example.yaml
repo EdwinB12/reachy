@@ -1,0 +1,24 @@
+# Voice I/O configuration for the Reachy agent.
+#
+# Copy this file to voice_config.yaml and edit as needed:
+#   cp voice_config.example.yaml voice_config.yaml
+#
+# See README.md's "Voice output" / "Voice input" sections for setup details.
+
+# Text-to-speech (Piper). Re-read on every reply, so toggling `enabled` or
+# tweaking other values takes effect immediately, no restart required.
+tts:
+  enabled: false
+  model_path: voices/en_US-lessac-medium.onnx
+  length_scale: 1.0
+
+# Speech-to-text (faster-whisper). Unlike TTS, this is only read once at
+# startup, so changes require restarting the agent.
+stt:
+  enabled: false
+  model_size: base.en
+  device: cpu
+  compute_type: int8
+  silence_duration_s: 0.8
+  min_speech_duration_s: 0.3
+  amplitude_threshold: 0.02
