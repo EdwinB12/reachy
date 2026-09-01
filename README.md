@@ -49,7 +49,7 @@ download a voice model into `voices/` (matching `model_path` in the config,
 default `voices/en_US-lessac-medium.onnx`):
 
 ```bash
-python3 -m piper.download_voices en_US-lessac-medium
+python3 -m piper.download_voices en_US-lessac-medium --download-dir voices/
 ```
 
 Browse [rhasspy/piper-voices](https://huggingface.co/rhasspy/piper-voices)

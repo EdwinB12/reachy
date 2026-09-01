@@ -13,8 +13,10 @@ YELLOW = "\033[33m"
 RESET = "\033[0m"
 
 
-def _read_stdin(input_queue: "queue.Queue") -> None:
+def _read_stdin(input_queue: "queue.Queue", input_ready: threading.Event) -> None:
     while True:
+        input_ready.wait()
+        input_ready.clear()
         try:
             line = input("You: ")
         except EOFError:
@@ -34,8 +36,10 @@ def main() -> None:
         input_queue = queue.Queue()
         stop_event = threading.Event()
         speaking_event = threading.Event()
+        input_ready = threading.Event()
+        input_ready.set()
 
-        threading.Thread(target=_read_stdin, args=(input_queue,), daemon=True).start()
+        threading.Thread(target=_read_stdin, args=(input_queue, input_ready), daemon=True).start()
         stt_thread = threading.Thread(
             target=stt.listen_loop,
             args=(mini, lambda text: input_queue.put(("voice", text)), stop_event, speaking_event),
@@ -100,6 +104,8 @@ def main() -> None:
                         tts.speak(mini, messages[-1].content)
                     finally:
                         speaking_event.clear()
+
+                input_ready.set()
         finally:
             stop_event.set()
             stt_thread.join(timeout=2)

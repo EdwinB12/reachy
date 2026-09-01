@@ -2,10 +2,12 @@ import time
 from typing import Literal
 
 import numpy as np
+import requests
 from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.tools import tool
 
 import agent_reachy.reachy_mini_fix as reachy_mini_fix  # noqa: F401 (patches wlan_ip detection before ReachyMini connects)
+from agent_reachy.daemon import BASE_URL
 from reachy_mini import ReachyMini
 from reachy_mini.utils import create_head_pose
 from reachy_mini.motion.recorded_move import RecordedMoves
@@ -265,6 +267,32 @@ def build_toolbox(mini: ReachyMini) -> list:
             mini.media.stop_recording()
             mini.media.stop_playing()
 
+    @tool
+    def get_volume() -> str:
+        """
+        Get the current volume of Reachy Mini's speaker.
+
+        Returns:
+            A message stating the current volume level, between 0 (mute) and 100 (max).
+        """
+        response = requests.get(f"{BASE_URL}/api/volume/current")
+        response.raise_for_status()
+        return f"Current volume is {response.json()['volume']}."
+
+    @tool
+    def change_volume(volume: int):
+        """
+        Change the volume of Reachy Mini's speaker.
+
+        Args:
+            volume: The desired volume level, between 0 (mute) and 100 (max).
+        """
+        response = requests.post(
+            f"{BASE_URL}/api/volume/set", json={"volume": volume}
+        )
+        response.raise_for_status()
+        return f"Volume set to {response.json()['volume']}."
+
     return [
         wake_up,
         go_to_sleep,
@@ -276,4 +304,6 @@ def build_toolbox(mini: ReachyMini) -> list:
         detect_face,
         read_imu,
         record_and_playback_audio,
+        get_volume,
+        change_volume,
     ]
